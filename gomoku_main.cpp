@@ -13,22 +13,24 @@ int my = -1;
 node mt_node;
 
 void start_timer(){
+  node_counter = 0;
   start = ze_warudo.now();
 }
 
 int stop_timer(){
   checkpoint = ze_warudo.now();
   int dt = std::chrono::duration_cast<std::chrono::milliseconds>(checkpoint - start).count();
-  std::cout << "The previous function took : " << dt << " ms" << std::endl;
+  std::cout << node_counter << " nodes visited" << " --- ";
+  std::cout << "the search took : " << dt << " ms" << std::endl;
   return dt;
 }
 
 int wh_turn(){
   std::cout << "White's Turn: ";
-  /*
+
   std::cin >> mx >> my;
   std::cout << std::endl;
-  */
+  /*
   std::cout << std::endl;
 
   if(main_board.turn==0){
@@ -50,6 +52,7 @@ int wh_turn(){
   std::cout << mx << ' ' << my << std::endl;
 
   stop_timer();
+  */
 
   return main_board.place(mx, my, WH);
 }
@@ -67,10 +70,10 @@ int bk_turn(){
   board tmp_board;
   tmp_board.turn = main_board.turn;
   std::copy(main_board.grid, main_board.grid+225, tmp_board.grid);
-  std::copy(main_board.val, main_board.val+225, tmp_board.val);
+  std::copy(main_board.eva_t, main_board.eva_t+225, tmp_board.eva_t);
   mt_node.x = mx;
   mt_node.y = my;
-  mt_node = s_maximizer(mt_node, 4, 0, BK, tmp_board, std::numeric_limits<float>::max());
+  mt_node = maximizer(mt_node, 5, 0, BK, tmp_board, std::numeric_limits<float>::max());
   mx = mt_node.x;
   my = mt_node.y;
   std::cout << mx << ' ' << my << std::endl;

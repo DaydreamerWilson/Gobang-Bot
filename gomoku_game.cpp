@@ -2,6 +2,7 @@
 #define gomoku_game
 
 #include <iostream>
+#include <sstream>
 #include <cmath>
 
 // Defining pieces
@@ -14,32 +15,39 @@
 #define MT_char '.'
 #define NT_char '*'
 
+int uid = 0;
+
 class board{
 public:
     int lc[4] = {0,0,0,0};
+    int uuid;
     int* grid;
+    float* eva_t;
     float center_x=7;
     float center_y=7;
-    float* val;
     const int h = 15;
     const int w = 15;
     int turn = 0;
 
   board(){
+    this->uuid = uid++;
+    //err_log << this->uuid << " created!" << std::endl;
     grid = (int*)new int[h*w];
-    val = (float*)new float [h*w];
+    eva_t = (float*)new float[h*w];
     for(int i = 0; i<h; i++){
       for(int j = 0; j<w; j++){
         grid[i*h+j] = MT;
-        val[i*h+j] = 0;
+        eva_t[i*h+j] = 0;
       }
     }
   }
 
-  void purge(){
+  ~ board(){
+    //err_log << "Deleting " << this->uuid << std::endl;
     delete[] grid;
-    delete[] val;
-    delete[] lc;
+    delete[] eva_t;
+    //err_log << "Deleted " << this->uuid << std::endl;
+    //delete[] lc;
   }
 
   // Force setting a position's piece
@@ -58,7 +66,7 @@ public:
     else{
       grid[y*h+x] = p;
       turn++;
-      val[y*h+x] = pos_eval(x, y);
+      eva_t[y*h+x] = pos_eval(x, y);
       center_x = (center_x*turn+x)/(turn+1);
       center_y = (center_y*turn+y)/(turn+1);
       return 0;
@@ -67,14 +75,14 @@ public:
 
 
   float get_val(int x, int y, int p){
-    if(x<0 || y<0 || x>14 || y>14){
+    if(x<0 || y<0 || x>=h || y>=w){
       return 0;
     }
     if(p==lookup(x, y)){
-      return val[y*h+x];
+      return eva_t[y*h+x];
     }
     else{
-      return -val[y*h+x]*1.3;
+      return -eva_t[y*h+x]*1.3;
     }
   }
 

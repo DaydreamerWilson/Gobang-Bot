@@ -12,10 +12,5 @@ calling the maximizer or the minimizer will call the other one recursively until
 
 Alpha-beta pruning is included.
 
-## Simplified Minimax:
-A slightly faster and simplified version of the previous minimax algorithm,
-
-it is around 2 time faster but can yield sub-optimal results.
-
 # Notes
 More algorithms will be implemented in the future.
